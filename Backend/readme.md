@@ -52,3 +52,58 @@ A successful registration returns a JSON object containing a token and user info
 
 - All fields are required.
 - The request body must be in JSON format.
+
+---
+
+# `/users/login` Endpoint Documentation
+
+## Description
+Authenticates a user and returns a token if credentials are valid.
+
+## Endpoint
+```
+POST /users/login
+```
+
+## Request Body
+
+Send a JSON object with the following required fields:
+- `email`: string (User's email address)
+- `password`: string (User's password)
+
+**Example:**
+```json
+{
+  "email": "john@example.com",
+  "password": "yourPassword123"
+}
+```
+
+## Example Response
+
+A successful login returns a JSON object containing a token and user information:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "60f7c2b8e1d2c80015e4c123",
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john@example.com"
+    // ...other user fields
+  }
+}
+```
+
+## Response Status Codes
+
+- **200 OK**: Login successful.
+- **400 Bad Request**: Missing or invalid input data.
+- **401 Unauthorized**: Invalid email or password.
+- **500 Internal Server Error**: Server error during login.
+
+## Notes
+
+- All fields are required.
+- The request body must be in JSON format.
