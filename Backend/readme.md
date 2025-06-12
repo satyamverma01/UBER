@@ -107,3 +107,77 @@ A successful login returns a JSON object containing a token and user information
 
 - All fields are required.
 - The request body must be in JSON format.
+
+---
+
+# `/users/profile` Endpoint Documentation
+
+## Description
+Retrieves the profile information of the authenticated user.
+
+## Endpoint
+```
+GET /users/profile
+```
+
+## Headers Required
+```
+Authorization: Bearer <token>
+```
+
+## Example Response
+
+```json
+{
+  "user": {
+    "_id": "60f7c2b8e1d2c80015e4c123",
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john@example.com"
+    // ...other user fields
+  }
+}
+```
+
+## Response Status Codes
+
+- **200 OK**: Profile retrieved successfully.
+- **401 Unauthorized**: No token provided or invalid token.
+- **404 Not Found**: User not found.
+- **500 Internal Server Error**: Server error while fetching profile.
+
+---
+
+# `/users/logout` Endpoint Documentation
+
+## Description
+Logs out the current user by invalidating their token.
+
+## Endpoint
+```
+POST /users/logout
+```
+
+## Headers Required
+```
+Authorization: Bearer <token>
+```
+
+## Example Response
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+## Response Status Codes
+
+- **200 OK**: User logged out successfully.
+- **401 Unauthorized**: No token provided or invalid token.
+- **500 Internal Server Error**: Server error during logout.
+
+## Notes
+
+- The token must be included in the Authorization header.
+- After logout, the token will be invalidated and can't be used for further requests.
