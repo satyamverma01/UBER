@@ -197,47 +197,24 @@ POST /captain/register
 ```
 
 ## Request Body
-
-Send a JSON object with the following required fields:
 ```json
 {
   "fullname": {
-    "firstname": "string",
+    "firstname": "string (min 3 characters)",
     "lastname": "string"
   },
-  "email": "string",
-  "password": "string",
+  "email": "string (valid email format)",
+  "password": "string (min 6 characters)",
   "vechicle": {
-    "color": "string",
-    "plate": "string",
-    "capacity": "number",
-    "vechicleType": "car|motorcycle|auto"
-  }
-}
-```
-
-**Example:**
-```json
-{
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
-  "email": "john.driver@example.com",
-  "password": "password123",
-  "vechicle": {
-    "color": "Black",
-    "plate": "ABC123",
-    "capacity": 4,
-    "vechicleType": "car"
+    "color": "string (min 3 characters)",
+    "plate": "string (min 3 characters)",
+    "capacity": "number (min 1)",
+    "vechicleType": "string (car|motorcycle|auto)"
   }
 }
 ```
 
 ## Example Response
-
-A successful registration returns a JSON object containing a token and captain information:
-
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -258,22 +235,126 @@ A successful registration returns a JSON object containing a token and captain i
 }
 ```
 
-## Response Status Codes
+## Status Codes
+- **201**: Successfully registered
+- **400**: Validation error
+- **409**: Email already exists
 
-- **201 Created**: Captain registered successfully.
-- **400 Bad Request**: Missing or invalid input data.
-  - Invalid email format
-  - Name must be at least 3 characters long
-  - Password must be at least 6 characters long
-  - Color must be at least 3 characters long
-  - Plate must be at least 3 characters long
-  - Capacity must be at least 1
-  - Invalid vehicle type
-- **409 Conflict**: Email already exists.
-- **500 Internal Server Error**: Server error during registration.
+---
+
+# `/captain/login` Endpoint Documentation
+
+## Description
+Authenticates a captain and returns an access token.
+
+## Endpoint
+```
+POST /captain/login
+```
+
+## Request Body
+```json
+{
+  "email": "string (valid email format)",
+  "password": "string (min 6 characters)"
+}
+```
+
+## Example Response
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "60f7c2b8e1d2c80015e4c123",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.driver@example.com",
+    "vechicle": {
+      "color": "Black",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vechicleType": "car"
+    }
+  }
+}
+```
+
+## Status Codes
+- **200**: Successfully logged in
+- **401**: Invalid credentials
+- **400**: Validation error
+
+---
+
+# `/captain/profile` Endpoint Documentation
+
+## Description
+Get the authenticated captain's profile information.
+
+## Endpoint
+```
+GET /captain/profile
+```
+
+## Headers Required
+```
+Authorization: Bearer <token>
+```
+
+## Example Response
+```json
+{
+  "captain": {
+    "_id": "60f7c2b8e1d2c80015e4c123",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.driver@example.com",
+    "vechicle": {
+      "color": "Black",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vechicleType": "car"
+    }
+  }
+}
+```
+
+## Status Codes
+- **200**: Success
+- **401**: Unauthorized
+
+---
+
+# `/captain/logout` Endpoint Documentation
+
+## Description
+Logs out the captain and invalidates the token.
+
+## Endpoint
+```
+GET /captain/logout
+```
+
+## Headers Required
+```
+Authorization: Bearer <token>
+```
+
+## Example Response
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+## Status Codes
+- **200**: Successfully logged out
+- **401**: Unauthorized
 
 ## Notes
-
-- All fields are required.
-- Vehicle type must be one of: 'car', 'motorcycle', 'auto'
-- The request body must be in JSON format.
+- Token will be blacklisted after logout
+- Cookie will be cleared if present
